@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
         int menuItem;
-        UserChoice userChoice = new UserChoice();
+        UserMenu userChoice = new UserMenu();
 
         while (true){
             menuItem = userChoice.choice();
@@ -10,10 +10,9 @@ public class Main {
             if (menuItem == 0){
                 System.out.println("Good luck!");
                 break;
+
             }
         }
-
     }
-
 }
 

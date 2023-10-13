@@ -1,22 +1,20 @@
-import java.io.IOException;
 import java.util.Scanner;
 
-public class UserChoice {
+public class UserMenu {
     int minItem;
     int maxItem;
-    UserChoice(){
+    int intItem;
+    String item;
+    UserMenu(){
         this.minItem = 0;
         this.maxItem = 5;
     }
-    UserChoice(int minItem, int maxItem){
+    UserMenu(int minItem, int maxItem){
         this.minItem = minItem;
         this.maxItem = maxItem;
     }
      int choice(){
         Scanner scanner = new Scanner(System.in);
-        int intItem;
-        String item;
-
         while (true){
             printMenu();
             item = scanner.next();
@@ -30,10 +28,6 @@ public class UserChoice {
                 System.out.println("Неверный выбор, введите цифру от 0 до 5");
             } else return intItem;
         }
-
-
-
-
     }
     static void printMenu(){
         System.out.println("Что вы хотите сделать? ");
