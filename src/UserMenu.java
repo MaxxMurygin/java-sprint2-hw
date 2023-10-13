@@ -13,7 +13,7 @@ public class UserMenu {
         this.minItem = minItem;
         this.maxItem = maxItem;
     }
-     int choice(){
+     int getUserChoice(){
         Scanner scanner = new Scanner(System.in);
         while (true){
             printMenu();
@@ -29,7 +29,7 @@ public class UserMenu {
             } else return intItem;
         }
     }
-    static void printMenu(){
+    void printMenu(){
         System.out.println("Что вы хотите сделать? ");
         System.out.println("1 - Считать все месячные отчёты ");
         System.out.println("2 - Считать годовой отчёт ");
