@@ -6,9 +6,7 @@ public class MonthlyReport {
     ArrayList<String> fileList;
     ArrayList<String> fileContent;
     void readMonthlyReports(){
-        String contentString;
-        String[] spltStr;
-        MonthlyData monthlyString = new MonthlyData();
+        MonthlyData monthlyString;
 
         fileReader = new FileReader();
         fileList = new ArrayList<>();
@@ -21,16 +19,11 @@ public class MonthlyReport {
         for (String file : fileList){
             fileContent = fileReader.readFileContents(file);
             for (String str : fileContent){
-
+                monthlyString = new MonthlyData();
                 monthlyString.item_name = str.split(",")[0];
-                if (str.split(",")[1].equals("TRUE") ){
-                    monthlyString.is_expense = true;
-                } else {
-                    monthlyString.is_expense = false;
-                }
-
+                monthlyString.is_expense = str.split(",")[1].equals("TRUE");
                 monthlyString.quantity = Integer.parseInt(str.split(",")[2]);
-                monthlyString.unit_price = Integer.parseInt(str.split(",")[2]);
+                monthlyString.unit_price = Integer.parseInt(str.split(",")[3]);
                 monthlyData.add(monthlyString);
 
             }
