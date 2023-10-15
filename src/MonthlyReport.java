@@ -21,12 +21,16 @@ public class MonthlyReport {
         for (String file : fileList){
             fileContent = fileReader.readFileContents(file);
             for (String str : fileContent){
-                spltStr = str.split(",");
-                System.out.println(spltStr);
-                monthlyString.item_name = spltStr[0];
-                monthlyString.is_expense = true;
-                monthlyString.quantity = Integer.parseInt(spltStr[2]);
-                monthlyString.unit_price = Integer.parseInt(spltStr[2]);
+
+                monthlyString.item_name = str.split(",")[0];
+                if (str.split(",")[1].equals("TRUE") ){
+                    monthlyString.is_expense = true;
+                } else {
+                    monthlyString.is_expense = false;
+                }
+
+                monthlyString.quantity = Integer.parseInt(str.split(",")[2]);
+                monthlyString.unit_price = Integer.parseInt(str.split(",")[2]);
                 monthlyData.add(monthlyString);
 
             }
