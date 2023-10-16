@@ -12,7 +12,7 @@ public class ReportEngine {
             String monthName = Converter.monthNumberToString(report.indexOf(marray) + 1);
             System.out.printf("%n %s %n", monthName);
             for (MonthlyData m1array : marray){
-                if (m1array.is_expense == true){
+                if (m1array.is_expense){
                     if (m1array.unit_price * m1array.quantity > biggestCost){
                         biggestCost = m1array.unit_price * m1array.quantity;
                         expensiveProduct = m1array.item_name;
@@ -64,7 +64,9 @@ public class ReportEngine {
         }
     }
 
-    void compareReports(ArrayList<MonthlyData> monthlyReport, ArrayList<YearlyData> yearlyReport){
+    void compareReports(ArrayList<ArrayList<MonthlyData>> monthlyReport,
+                        HashMap<Integer, ArrayList<YearlyData>> yearlyReport){
+
 
     }
 }

@@ -16,7 +16,22 @@ public class Main {
             } else if (menuItem == 2) {
                 yearlyReport.readEarlyReports();
             } else if (menuItem == 3) {
-                //reportEngine.compareReports(monthlyReport.monthlyData, yearlyReport.yearlyData);
+                if (monthlyReport.monthlyData == null || yearlyReport.allYearData.isEmpty()){
+                    System.out.println("Необходимые для сверки отчеты не загружены. Загрузить?");
+                    userChoice.printYesNoMenu();
+                    menuItem = userChoice.getUserChoice(1, 2);
+                    if (menuItem == 1){
+                        if (monthlyReport.monthlyData == null ){
+                            monthlyReport.readMonthlyReports();
+                        } else if (yearlyReport.allYearData.isEmpty()) {
+                            yearlyReport.readEarlyReports();
+                        }
+                    } else {
+                        System.out.println("На НЕТ и суда нет...");
+                        continue;
+                    }
+                }
+                reportEngine.compareReports(monthlyReport.monthlyData, yearlyReport.allYearData);
             } else if (menuItem == 4) {
                 if (monthlyReport.monthlyData == null){
                     System.out.println("Месячные отчеты не загружены. Загрузить?");
