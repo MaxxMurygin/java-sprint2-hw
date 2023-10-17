@@ -1,4 +1,4 @@
-public class MonthlyData {
+public class MonthData {
     int year;
     int month;
     String item_name;
@@ -6,7 +6,7 @@ public class MonthlyData {
     int quantity;
     int unit_price;
 
-    public MonthlyData(int year, int month, String item_name, boolean is_expense, int quantity, int unit_price) {
+    public MonthData(int year, int month, String item_name, boolean is_expense, int quantity, int unit_price) {
         this.year = year;
         this.month = month;
         this.item_name = item_name;

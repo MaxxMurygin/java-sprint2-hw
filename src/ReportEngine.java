@@ -2,71 +2,149 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ReportEngine {
+    BestProduct[] maxAmount = new BestProduct[12];
+    Integer[] amountArray = new Integer[13];
+    HashMap<Boolean, BestProduct[]> productByAmount = new HashMap<>();
+    HashMap<Integer, HashMap<Boolean,Integer[]>> amountByProductYear = new HashMap<>();
+    HashMap<Boolean,Integer[]> amountByProductMonth = new HashMap<>();
+    HashMap<Boolean,Integer[]> amountByMonth = new HashMap<>();
+    HashMap<Integer, HashMap<Boolean,Integer[]>> amountByYear = new HashMap<>();
+    static class BestProduct{
+        String productName;
+        int profit;
 
-    void printMonthlyReports(ArrayList<ArrayList<MonthlyData>> report){
-        int biggestProfitProduct = 0;
-        int biggestCost = 0;
-        String profitProduct = "";
-        String expensiveProduct = "";
-        for (ArrayList<MonthlyData> marray : report){
-            String monthName = Converter.monthNumberToString(report.indexOf(marray) + 1);
-            System.out.printf("%n %s %n", monthName);
-            for (MonthlyData m1array : marray){
-                if (m1array.is_expense){
-                    if (m1array.unit_price * m1array.quantity > biggestCost){
-                        biggestCost = m1array.unit_price * m1array.quantity;
-                        expensiveProduct = m1array.item_name;
-                    }
-                } else {
-                    if (m1array.unit_price * m1array.quantity > biggestProfitProduct){
-                        biggestProfitProduct = m1array.unit_price * m1array.quantity;
-                        profitProduct = m1array.item_name;
-                    }
-
-                }
-            }
-            System.out.printf("Самый прибыльный продукт: %s на сумму %d %n", profitProduct, biggestProfitProduct);
-            System.out.printf("Самый затратный продукт: %s на сумму %d %n", expensiveProduct, biggestCost);
-
+        public BestProduct(String productName, int profit) {
+            this.productName = productName;
+            this.profit = profit;
         }
     }
 
-    void printYearlyReports(HashMap<Integer, ArrayList<YearlyData>> report){
-        int[] debtArray = new int[12];
-        int[] creditArray = new int[12];
-        int summaryDebt = 0;
-        int summaryCredit = 0;
-        int debtOperationCount = 0;
-        int creditOperationCount = 0;
-        for (Integer currentYear : report.keySet()){
-            ArrayList<YearlyData> currentYearData = report.get(currentYear);
-            for (YearlyData data: currentYearData){
-                if (true){//data.is_expense
-                    creditArray[data.month - 1] += data.amount;
-                    creditOperationCount++;
-                    summaryCredit += data.amount;
-                }else {
-                    debtArray[data.month - 1] += data.amount;
-                    debtOperationCount++;
-                    summaryDebt += data.amount;
-                }
+    void printMonthReports(ArrayList<MonthData> report){
+        makeMonthData(report);
+        for (int i = 1; i <= 12; i++) {
+            if (productByAmount.get(true)[i] == null){
+                continue;
             }
-            System.out.printf("Показатели за %d год : %n", currentYear);
-            System.out.println("Прибыль по месяцам: ");
-            for (int i = 0; i < debtArray.length; i++){
-                if (debtArray[i] != 0){
-                    System.out.printf("%s: %d %n", Converter.monthNumberToString(i + 1), debtArray[i]);
-                }
-
-            }
-            System.out.printf("Средний приход по всем операциям: %d %n", summaryDebt / debtOperationCount);
-            System.out.printf("Средний расход по всем операциям: %d %n", summaryCredit / creditOperationCount);
+            System.out.printf("За %s месяц: %n", Converter.monthNumberToString(i));
+            System.out.printf("Самый прибыльный продукт: %s на сумму %d %n", productByAmount.get(false)[i].productName,
+                    productByAmount.get(false)[i].profit);
+            System.out.printf("Самый затратный продукт: %s на сумму %d %n", productByAmount.get(true)[i].productName,
+                    productByAmount.get(true)[i].profit);
         }
     }
 
-    void compareReports(ArrayList<ArrayList<MonthlyData>> monthlyReport,
-                        HashMap<Integer, ArrayList<YearlyData>> yearlyReport){
+    void printYearReports(ArrayList<YearData> report){
+        makeYearData(report);
+        for (Integer year : amountByYear.keySet()) {
+            HashMap<Boolean,Integer[]> yearData;
+
+            yearData = amountByYear.get(year);
+            System.out.printf("Информация за %d год:%n", year);
+            System.out.println();
+            for (Boolean isExpense : yearData.keySet()) {
+                if (isExpense){
+                    continue;
+                }
+                Integer[] amounts = yearData.get(isExpense);
+                for (int i = 1; i <= 12 ; i++) {
+                    if (amounts[i] != null){
+                        System.out.printf("Приыль за %s была %d %n", Converter.monthNumberToString(i), amounts[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    void checkReports(ArrayList<MonthData> monthReport, ArrayList<YearData> yearReport){
+        makeYearData(yearReport);
+        //makeMonthData(monthReport);
+        for (MonthData data : monthReport) {
+            Integer[] monthlyAmount;
+            int year = data.year;
+            int month = data.month;
+            //String productName = data.item_name;
+            Boolean isExpense = data.is_expense;
+            int quantity = data.quantity;
+            int price = data.unit_price;
+            int amount = quantity * price;
+
+            monthlyAmount = amountByProductMonth.get(isExpense);
+            monthlyAmount[month] +=  amount;
+            amountByProductMonth.put(isExpense,monthlyAmount);
+
+
+
+        }
+
+        for (Integer year : amountByYear.keySet()) {
+            amountByMonth = amountByYear.get(year);
+
+        }
+
+
 
 
     }
+
+    void makeMonthData(ArrayList<MonthData> report){
+        for (MonthData data : report){
+            int month = data.month;
+            String productName = data.item_name;
+            Boolean isExpense = data.is_expense;
+            int quantity = data.quantity;
+            int price = data.unit_price;
+            int amount = quantity * price;
+            BestProduct product = new BestProduct(productName, amount);
+            if (!productByAmount.containsKey(isExpense)){
+                maxAmount = new BestProduct[13];
+                maxAmount[month] = product;
+                productByAmount.put(isExpense, maxAmount);
+                continue;
+            }
+            if (productByAmount.get(isExpense)[month] == null){
+                maxAmount = new BestProduct[13];
+                maxAmount = productByAmount.get(isExpense);
+                maxAmount[month] = product;
+                productByAmount.put(isExpense, maxAmount);
+                continue;
+            }
+            if (product.profit > productByAmount.get(isExpense)[month].profit){
+                maxAmount = new BestProduct[13];
+                maxAmount = productByAmount.get(isExpense);
+                maxAmount[month] = product;
+                productByAmount.put(isExpense, maxAmount);
+            }
+        }
+    }
+
+    void makeYearData(ArrayList<YearData> report){
+        for (YearData data : report) {
+            int year = data.year;
+            int month = data.month;
+            int amount = data.amount;
+            boolean isExpense = data.is_expense;
+
+            if (!amountByMonth.containsKey(isExpense)){
+                amountArray = new Integer[13];
+                amountArray[month] = amount;
+                amountByMonth.put(isExpense, amountArray);
+                continue;
+            }
+            if (amountByMonth.get(isExpense)[month] == null){
+                amountArray = new Integer[13];
+                amountArray = amountByMonth.get(isExpense);
+                amountArray[month] = amount;
+                amountByMonth.put(isExpense, amountArray);
+            }
+            amountByMonth.put(isExpense,amountArray);
+            if (!amountByYear.containsKey(year)){
+                amountByYear.put(year, amountByMonth);
+                continue;
+            }
+            amountByYear.put(year, amountByMonth);
+        }
+
+
+    }
+
 }

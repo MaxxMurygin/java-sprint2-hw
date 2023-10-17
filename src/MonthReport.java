@@ -1,10 +1,9 @@
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-public class MonthlyReport {
-    ArrayList<MonthlyData> monthlyDatas = new ArrayList<>();
+public class MonthReport {
+    ArrayList<MonthData> monthData = new ArrayList<>();
     FileReader fileReader;
     ArrayList<String> fileList;
     ArrayList<String> fileContent;
@@ -31,8 +30,8 @@ public class MonthlyReport {
                     boolean is_expense = splittedString[1].equals("TRUE");
                     int quantity = Integer.parseInt(splittedString[2]);
                     int unit_price = Integer.parseInt(splittedString[3]);
-                    MonthlyData monthlyData = new MonthlyData(year, month, item_name, is_expense, quantity, unit_price);
-                    monthlyDatas.add(monthlyData);
+                    MonthData dataString = new MonthData(year, month, item_name, is_expense, quantity, unit_price);
+                    monthData.add(dataString);
                 } catch (NumberFormatException n){
                 }
             }

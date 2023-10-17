@@ -5,6 +5,9 @@ public class Converter {
                 "Июль", "Август", "Сентябрь",
                 "Окрябрь", "Ноябрь", "Декабрь",
         };
-        return monthNames[num - 1];
+        if (num >=1 && num <=12){
+            return monthNames[num - 1];
+        }
+        return "Безвременье настало...";
     }
 }
