@@ -41,7 +41,7 @@ public class ReportEngine {
         for (Integer currentYear : report.keySet()){
             ArrayList<YearlyData> currentYearData = report.get(currentYear);
             for (YearlyData data: currentYearData){
-                if (data.is_expense){
+                if (true){//data.is_expense
                     creditArray[data.month - 1] += data.amount;
                     creditOperationCount++;
                     summaryCredit += data.amount;

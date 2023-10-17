@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class YearlyReport {
+    HashMap<Integer, HashMap<Integer, HashMap<Boolean,Integer>>> dataByYear = new HashMap<>();
     ArrayList<YearlyData> currentYearData;
     HashMap<Integer, ArrayList<YearlyData>> allYearData = new HashMap<>();
     FileReader fileReader;
@@ -25,16 +26,20 @@ public class YearlyReport {
             fileContent = fileReader.readFileContents(file.getName());
             int currentYear = Integer.parseInt(file.getName().substring(2,6));
             for (String str : fileContent){
-                YearlyData yearlyString = new YearlyData();
+
+
                 String[] splittedString = str.split(",");
                 try {
-                    yearlyString.month = Byte.parseByte(splittedString[0]);
-                    yearlyString.amount = Integer.parseInt(splittedString[1]);
-                    yearlyString.is_expense = splittedString[2].equals("true");
+                    int month = Integer.parseInt(splittedString[0]);
+                    int amount = Integer.parseInt(splittedString[1]);
+                    boolean is_expense = splittedString[2].equals("true");
+                    YearlyData yearlyString = new YearlyData(month, amount);
+                    currentYearData.add(yearlyString);
                 } catch (NumberFormatException n){
                     continue;
                 }
-                currentYearData.add(yearlyString);
+
+
             }
             allYearData.put(currentYear,currentYearData);
         }
