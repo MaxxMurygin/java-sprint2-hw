@@ -18,6 +18,9 @@ public class YearReport {
             System.out.println("Не найдены файлы годовых отчетов...");
             return;
         }
+        if (!yearData.isEmpty()){
+            yearData.clear();
+        }
         for (File file : files){
             fileContent = fileReader.readFileContents(file.getName());
             int year = Integer.parseInt(file.getName().substring(2,6));

@@ -8,6 +8,8 @@ public class MonthReport {
     ArrayList<String> fileList;
     ArrayList<String> fileContent;
 
+
+
     void readMonthlyReports(){
         fileReader = new FileReader();
         fileList = new ArrayList<>();
@@ -18,6 +20,9 @@ public class MonthReport {
         if (files.length == 0){
             System.out.println("Не найдены файлы месячных отчетов...");
             return;
+        }
+        if (!monthData.isEmpty()){
+                    monthData.clear();
         }
         for (File file : files){
             int year = Integer.parseInt(file.getName().substring(2,6));

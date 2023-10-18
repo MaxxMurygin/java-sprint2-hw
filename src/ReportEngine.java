@@ -4,9 +4,10 @@ import java.util.HashMap;
 public class ReportEngine {
     BestProduct[] maxAmount = new BestProduct[12];
     Integer[] amountArray = new Integer[13];
+    Integer[] amountArrayFromMonthly = new Integer[13];
     HashMap<Boolean, BestProduct[]> productByAmount = new HashMap<>();
-    HashMap<Integer, HashMap<Boolean,Integer[]>> amountByProductYear = new HashMap<>();
-    HashMap<Boolean,Integer[]> amountByProductMonth = new HashMap<>();
+    HashMap<Integer, HashMap<Boolean,Integer[]>> amountByYearFromMonthly = new HashMap<>();
+    HashMap<Boolean,Integer[]> amountByMonthFromMonthly = new HashMap<>();
     HashMap<Boolean,Integer[]> amountByMonth = new HashMap<>();
     HashMap<Integer, HashMap<Boolean,Integer[]>> amountByYear = new HashMap<>();
     static class BestProduct{
@@ -19,8 +20,8 @@ public class ReportEngine {
         }
     }
 
-    void printMonthReports(ArrayList<MonthData> report){
-        makeMonthData(report);
+    void printMonthReports(ArrayList<MonthData> data){
+        makeMonthData(data);
         for (int i = 1; i <= 12; i++) {
             if (productByAmount.get(true)[i] == null){
                 continue;
@@ -33,8 +34,8 @@ public class ReportEngine {
         }
     }
 
-    void printYearReports(ArrayList<YearData> report){
-        makeYearData(report);
+    void printYearReports(ArrayList<YearData> data){
+        makeYearData(data);
         for (Integer year : amountByYear.keySet()) {
             HashMap<Boolean,Integer[]> yearData;
 
@@ -55,39 +56,49 @@ public class ReportEngine {
         }
     }
 
-    void checkReports(ArrayList<MonthData> monthReport, ArrayList<YearData> yearReport){
-        makeYearData(yearReport);
-        //makeMonthData(monthReport);
-        for (MonthData data : monthReport) {
-            Integer[] monthlyAmount;
-            int year = data.year;
-            int month = data.month;
-            //String productName = data.item_name;
-            Boolean isExpense = data.is_expense;
-            int quantity = data.quantity;
-            int price = data.unit_price;
-            int amount = quantity * price;
+    void checkReports(ArrayList<MonthData> monthData, ArrayList<YearData> yearData){
+        HashMap<Boolean,Integer[]> reportYear;
+        HashMap<Boolean,Integer[]> reportMonth;
+        Integer[] amountsFromYear;
+        Integer[] amountsFromMonth;
+        int errorCount = 0;
 
-            monthlyAmount = amountByProductMonth.get(isExpense);
-            monthlyAmount[month] +=  amount;
-            amountByProductMonth.put(isExpense,monthlyAmount);
-
-
-
-        }
-
+        makeYearData(yearData);
+        makeMonthData(monthData);
         for (Integer year : amountByYear.keySet()) {
-            amountByMonth = amountByYear.get(year);
-
+            reportYear = amountByYear.get(year);
+            reportMonth = amountByYearFromMonthly.get(year);
+            for (Boolean isExpense : reportYear.keySet()) {
+                amountsFromYear = reportYear.get(isExpense);
+                amountsFromMonth = reportMonth.get(isExpense);
+                for (int i = 1; i <= 12; i++) {
+                    if (amountsFromYear[i] == null || amountsFromMonth[i] == null){
+                        continue;
+                    }
+                    int comparator = amountsFromYear[i].compareTo(amountsFromMonth[i]);
+                    if ( comparator < 0){
+                        System.out.printf("Данные  по %s в месячном отчете за %s %d года больше, чем годовом отчете%n",
+                                Converter.booleanToExpense(isExpense), Converter.monthNumberToString(i), year);
+                        errorCount++;
+                    } else if (comparator > 0) {
+                        System.out.printf("Данные  по %s в месячном отчете за %s %d года меньше, чем годовом отчете%n",
+                                Converter.booleanToExpense(isExpense), Converter.monthNumberToString(i), year);
+                        errorCount++;
+                    }
+                }
+            }
         }
-
-
-
-
+        if (errorCount == 0){
+            System.out.println("Проверка прошла успешно");
+        }
     }
 
     void makeMonthData(ArrayList<MonthData> report){
+        if (!amountByMonthFromMonthly.isEmpty()){
+            amountByMonthFromMonthly.clear();
+        }
         for (MonthData data : report){
+            int year = data.year;
             int month = data.month;
             String productName = data.item_name;
             Boolean isExpense = data.is_expense;
@@ -95,7 +106,26 @@ public class ReportEngine {
             int price = data.unit_price;
             int amount = quantity * price;
             BestProduct product = new BestProduct(productName, amount);
-            if (!productByAmount.containsKey(isExpense)){
+
+            if (!amountByMonthFromMonthly.containsKey(isExpense)){          //ФОрмируем данные для сверки
+                amountArrayFromMonthly = new Integer[13];
+                amountArrayFromMonthly[month] = amount;
+                amountByMonthFromMonthly.put(isExpense, amountArrayFromMonthly);
+            }else {
+                if (amountByMonthFromMonthly.get(isExpense)[month] == null){
+                    amountArrayFromMonthly = new Integer[13];
+                    amountArrayFromMonthly = amountByMonthFromMonthly.get(isExpense);
+                    amountArrayFromMonthly[month] = amount;
+                    amountByMonthFromMonthly.put(isExpense, amountArrayFromMonthly);
+                }else {
+                    amountArrayFromMonthly = amountByMonthFromMonthly.get(isExpense);
+                    amountArrayFromMonthly[month] += amount;
+                    amountByMonthFromMonthly.put(isExpense, amountArrayFromMonthly);
+                }
+            }
+            amountByYearFromMonthly.put(year,amountByMonthFromMonthly);
+
+            if (!productByAmount.containsKey(isExpense)){                   //Формируем данные для отчета
                 maxAmount = new BestProduct[13];
                 maxAmount[month] = product;
                 productByAmount.put(isExpense, maxAmount);
@@ -118,12 +148,14 @@ public class ReportEngine {
     }
 
     void makeYearData(ArrayList<YearData> report){
+        if(!amountByMonth.isEmpty()){
+            amountByMonth.clear();
+        }
         for (YearData data : report) {
             int year = data.year;
             int month = data.month;
             int amount = data.amount;
             boolean isExpense = data.is_expense;
-
             if (!amountByMonth.containsKey(isExpense)){
                 amountArray = new Integer[13];
                 amountArray[month] = amount;
@@ -143,8 +175,5 @@ public class ReportEngine {
             }
             amountByYear.put(year, amountByMonth);
         }
-
-
     }
-
 }

@@ -16,6 +16,9 @@ public class Main {
             } else if (menuItem == 1) {
                 monthReport.readMonthlyReports();
             } else if (menuItem == 2) {
+                if (!yearReport.yearData.isEmpty()){
+                    yearReport.yearData.clear();
+                }
                 yearReport.readEarlyReports();
             } else if (menuItem == 3) {
                 if (monthReport.monthData.isEmpty() || yearReport.yearData.isEmpty()){
@@ -25,7 +28,8 @@ public class Main {
                     if (menuItem == 1){
                         if (monthReport.monthData.isEmpty()){
                             monthReport.readMonthlyReports();
-                        } else if (yearReport.yearData.isEmpty()) {
+                        }
+                        if (yearReport.yearData.isEmpty()) {
                             yearReport.readEarlyReports();
                         }
                     } else {

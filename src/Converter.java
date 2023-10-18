@@ -10,4 +10,11 @@ public class Converter {
         }
         return "Безвременье настало...";
     }
+
+    static String booleanToExpense(boolean isExpense){
+        if (isExpense){
+            return "расходам";
+        }
+        return "доходам";
+    }
 }
