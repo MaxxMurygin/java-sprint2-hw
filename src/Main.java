@@ -1,6 +1,4 @@
 public class Main {
-
-
     public static void main(String[] args) {
         int menuItem;
         UserMenu userChoice = new UserMenu();
@@ -34,10 +32,10 @@ public class Main {
                         }
                     } else {
                         System.out.println("На НЕТ и суда нет...");
-                        continue;
                     }
+                } else {
+                    reportEngine.checkReports(monthReport.monthData, yearReport.yearData);
                 }
-                reportEngine.checkReports(monthReport.monthData, yearReport.yearData);
             } else if (menuItem == 4) {
                 if (monthReport.monthData.isEmpty()){
                     System.out.println("Месячные отчеты не загружены. Загрузить?");

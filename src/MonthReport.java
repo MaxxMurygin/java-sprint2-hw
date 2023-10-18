@@ -8,8 +8,6 @@ public class MonthReport {
     ArrayList<String> fileList;
     ArrayList<String> fileContent;
 
-
-
     void readMonthlyReports(){
         fileReader = new FileReader();
         fileList = new ArrayList<>();
@@ -17,7 +15,7 @@ public class MonthReport {
         File dir = new File("./resources/");
         FilenameFilter filter = (f, name) -> name.startsWith("m.");
         File[] files = dir.listFiles(filter);
-        if (files.length == 0){
+        if (files == null){
             System.out.println("Не найдены файлы месячных отчетов...");
             return;
         }

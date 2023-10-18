@@ -1,18 +1,8 @@
 import java.util.Scanner;
 
 public class UserMenu {
-  //  int minItem;
- //   int maxItem;
     int intItem;
     String item;
-    /*    UserMenu(){
-        this.minItem = 0;
-        this.maxItem = 5;
-    }
-    UserMenu(int minItem, int maxItem){
-        this.minItem = minItem;
-        this.maxItem = maxItem;
-    }*/
 
      int getUserChoice(int minItem, int maxItem){
         Scanner scanner = new Scanner(System.in);

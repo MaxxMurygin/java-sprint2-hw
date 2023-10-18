@@ -14,7 +14,7 @@ public class YearReport {
         File dir = new File("./resources/");
         FilenameFilter filter = (f, name) -> name.startsWith("y.");
         File[] files = dir.listFiles(filter);
-        if (files.length == 0){
+        if (files == null){
             System.out.println("Не найдены файлы годовых отчетов...");
             return;
         }
