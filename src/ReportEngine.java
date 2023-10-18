@@ -67,6 +67,10 @@ public class ReportEngine {
         makeMonthData(monthData);
         for (Integer year : amountByYear.keySet()) {
             reportYear = amountByYear.get(year);
+            if (!amountByYearFromMonthly.containsKey(year)){
+                System.out.printf("Нет данных из месячных отчетов за %d год. ", year);
+                continue;
+            }
             reportMonth = amountByYearFromMonthly.get(year);
             for (Boolean isExpense : reportYear.keySet()) {
                 amountsFromYear = reportYear.get(isExpense);
@@ -106,14 +110,18 @@ public class ReportEngine {
             int price = data.unit_price;
             int amount = quantity * price;
             BestProduct product = new BestProduct(productName, amount);
+            amountArrayFromMonthly = new Integer[13];
 
+            if (!amountByYearFromMonthly.containsKey(year)){
+                if (!amountByMonthFromMonthly.isEmpty()){
+                    amountByMonthFromMonthly.clear();
+                }
+            }
             if (!amountByMonthFromMonthly.containsKey(isExpense)){          //ФОрмируем данные для сверки
-                amountArrayFromMonthly = new Integer[13];
                 amountArrayFromMonthly[month] = amount;
                 amountByMonthFromMonthly.put(isExpense, amountArrayFromMonthly);
             }else {
                 if (amountByMonthFromMonthly.get(isExpense)[month] == null){
-                    amountArrayFromMonthly = new Integer[13];
                     amountArrayFromMonthly = amountByMonthFromMonthly.get(isExpense);
                     amountArrayFromMonthly[month] = amount;
                     amountByMonthFromMonthly.put(isExpense, amountArrayFromMonthly);
@@ -167,11 +175,6 @@ public class ReportEngine {
                 amountArray = amountByMonth.get(isExpense);
                 amountArray[month] = amount;
                 amountByMonth.put(isExpense, amountArray);
-            }
-            amountByMonth.put(isExpense,amountArray);
-            if (!amountByYear.containsKey(year)){
-                amountByYear.put(year, amountByMonth);
-                continue;
             }
             amountByYear.put(year, amountByMonth);
         }

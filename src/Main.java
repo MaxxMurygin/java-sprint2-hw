@@ -11,13 +11,16 @@ public class Main {
             if (menuItem == 0){
                 System.out.println("Удачи!");
                 break;
+
             } else if (menuItem == 1) {
                 monthReport.readMonthlyReports();
+
             } else if (menuItem == 2) {
                 if (!yearReport.yearData.isEmpty()){
                     yearReport.yearData.clear();
                 }
                 yearReport.readEarlyReports();
+
             } else if (menuItem == 3) {
                 if (monthReport.monthData.isEmpty() || yearReport.yearData.isEmpty()){
                     System.out.println("Необходимые для сверки отчеты не загружены. Загрузить?");
@@ -32,10 +35,11 @@ public class Main {
                         }
                     } else {
                         System.out.println("На НЕТ и суда нет...");
+                        continue;
                     }
-                } else {
-                    reportEngine.checkReports(monthReport.monthData, yearReport.yearData);
                 }
+                reportEngine.checkReports(monthReport.monthData, yearReport.yearData);
+
             } else if (menuItem == 4) {
                 if (monthReport.monthData.isEmpty()){
                     System.out.println("Месячные отчеты не загружены. Загрузить?");
@@ -49,6 +53,7 @@ public class Main {
                     }
                 }
                 reportEngine.printMonthReports(monthReport.monthData);
+
             } else if (menuItem == 5) {
                 if (yearReport.yearData.isEmpty()){
                     System.out.println("Годовые отчеты не загружены. Загрузить?");
