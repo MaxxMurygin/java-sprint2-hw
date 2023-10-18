@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ReportEngine {
-    BestProduct[] maxAmount = new BestProduct[12];
+    BestProduct[] maxAmount = new BestProduct[13];
     Integer[] amountArray = new Integer[13];
     Integer[] amountArrayFromMonthly = new Integer[13];
     HashMap<Boolean, BestProduct[]> productByAmount = new HashMap<>();
